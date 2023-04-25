@@ -1,6 +1,7 @@
 package com.hanygen.helloworldbatch.config;
 
 import com.hanygen.helloworldbatch.listener.HelloWorldJobExecutionListener;
+import com.hanygen.helloworldbatch.listener.HelloWorldStepExecutionListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
@@ -25,6 +26,8 @@ public class BatchConfiguration {
 
     @Autowired
     private HelloWorldJobExecutionListener helloWorldJobExecutionListener;
+    @Autowired
+    private HelloWorldStepExecutionListener helloWorldStepExecutionListener;
 
     /**
      * El único Step del Job
@@ -33,6 +36,7 @@ public class BatchConfiguration {
     @Bean
     public Step step1() {
         return steps.get("Step1")
+                .listener(helloWorldStepExecutionListener)
                 .tasklet(helloworldTasklet())
                 .build();
     }
@@ -45,7 +49,7 @@ public class BatchConfiguration {
         return (new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
-                System.out.println("hello world");
+                System.out.println("This is the JOB purpose:  Hello World");
                 return RepeatStatus.FINISHED;
             }
         });

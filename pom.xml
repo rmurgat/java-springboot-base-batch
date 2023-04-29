@@ -5,14 +5,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.0</version>
+        <version>2.7.11</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.hanygen</groupId>
     <artifactId>helloworldbatch</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>helloworldbatch</name>
-    <description>Java Springboot Batch Demo to Hello World</description>
+    <description>Java SpringBoot Batch Demo to Hello World</description>
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -32,9 +32,10 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>            <groupId>org.springframework.batch</groupId>
+        <dependency>
+            <groupId>org.springframework.batch</groupId>
             <artifactId>spring-batch-test</artifactId>
-            <scope>test</scope>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

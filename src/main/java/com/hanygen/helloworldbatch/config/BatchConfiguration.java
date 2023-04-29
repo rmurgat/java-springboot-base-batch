@@ -2,6 +2,9 @@ package com.hanygen.helloworldbatch.config;
 
 import com.hanygen.helloworldbatch.listener.HelloWorldJobExecutionListener;
 import com.hanygen.helloworldbatch.listener.HelloWorldStepExecutionListener;
+import com.hanygen.helloworldbatch.processor.InMemoryItemProcessor;
+import com.hanygen.helloworldbatch.reader.InMemoryReader;
+import com.hanygen.helloworldbatch.writer.ConsoleItemWrite;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
@@ -10,6 +13,7 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +33,9 @@ public class BatchConfiguration {
     @Autowired
     private HelloWorldStepExecutionListener helloWorldStepExecutionListener;
 
+    @Autowired
+    private InMemoryItemProcessor inMemoryItemProcessor;
+
     /**
      * El único Step del Job
      * @return Job
@@ -38,6 +45,20 @@ public class BatchConfiguration {
         return steps.get("Step1")
                 .listener(helloWorldStepExecutionListener)
                 .tasklet(helloworldTasklet())
+                .build();
+    }
+
+    @Bean
+    public InMemoryReader reader() {
+        return new InMemoryReader();
+    }
+
+    public Step step2Chunk() {
+        return steps.get("Step2Chunk")
+                .<Integer,Integer>chunk(3)
+                .reader(reader())
+                .processor((ItemProcessor) inMemoryItemProcessor)
+                .writer(new ConsoleItemWrite())
                 .build();
     }
 
@@ -64,6 +85,7 @@ public class BatchConfiguration {
         return jobs.get("helloworldJob")
                 .listener(helloWorldJobExecutionListener)
                 .start(step1())
+                .next(step2Chunk())   // adding step 2 chunk
                 .build();
     }
 

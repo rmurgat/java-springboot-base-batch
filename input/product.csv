@@ -1,13 +1,13 @@
 productId, productName, ProductDesc, price, unit
-1, Apple, Apple Cell Phone, 500.0, 10
-2, Dell, Dell Computer, 3000, 5
-3, Office, MS Office Software, 196, 23
-4, Lenovo, Lenovo Tiny, 3500.0, 10
-5, HD, Softail Deuce HD Motorcycle, 3000, 5
-6, Chevy, Chevrolet SS, 60000, 23
-7, Jeep, Jeep Wagoneer , 105000.0, 10
-8, Nissan, Nissan Sentra, 150000, 5
-9, Dodge, Dodge Journey SL, 315000, 23
-10, HP, HP Probook Laptop, 1500.0, 10
-11, IBM, IBM Mechanic Keyboard, 100, 5
-12, Mytek, Mytek Fan 10 inch, 196, 23
+1, Apple, Apple Cell Phone, 100.0, 10
+2, Dell, Dell Computer, 2000.2, 5
+3, Office, MS Office Software, 196.3, 23
+4, Lenovo, Lenovo Tiny, 3500.4, 10, error
+5, HD, Softail Deuce HD Motorcycle, 2500.5, 5
+6, Chevy, Chevrolet SS, 60000.6, 23
+7, Jeep, Jeep Wagoneer , 105000.7, 10, error
+8, Nissan, Nissan Sentra, 150000.8, 5
+9, Dodge, Dodge Journey SL, 315000.9, 23
+10, HP, HP Pro Book Laptop, 1500.10, 10
+11, IBM, IBM Mechanic Keyboard, 100.11, 5
+12, Mytek, Mytek Fan 10 inch, 196.12, 23, error

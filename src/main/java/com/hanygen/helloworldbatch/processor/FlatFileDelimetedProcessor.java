@@ -9,11 +9,15 @@ public class FlatFileDelimetedProcessor implements ItemProcessor<Product, Produc
     @Override
     public Product process(Product product) throws Exception {
         Product opp = new Product();
-        opp.setProductId(product.getProductId());
-        opp.setProductDesc(product.getProductDesc()+" -> processed");
-        opp.setProductName(product.getProductName()+" -> processed");
-        opp.setPricce(product.getPricce());
-        opp.setUnit(product.getUnit());
+        if(product.getProductId()==2) {
+            throw new RuntimeException("Because ID is 2");           //rmt - trigger an exception
+        } else {
+            opp.setProductId(product.getProductId());
+            opp.setProductDesc(product.getProductDesc() + " -> processed");
+            opp.setProductName(product.getProductName() + " -> processed");
+            opp.setPricce(product.getPricce());
+            opp.setUnit(product.getUnit());
+        }
         return opp;
     }
 }

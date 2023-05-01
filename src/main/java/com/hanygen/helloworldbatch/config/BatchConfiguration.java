@@ -1,5 +1,6 @@
 package com.hanygen.helloworldbatch.config;
 
+import com.hanygen.helloworldbatch.listener.BatchSkipListener;
 import com.hanygen.helloworldbatch.listener.HelloWorldJobExecutionListener;
 import com.hanygen.helloworldbatch.listener.HelloWorldStepExecutionListener;
 import com.hanygen.helloworldbatch.processor.FlatFileDelimetedProcessor;
@@ -9,6 +10,8 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.step.skip.AlwaysSkipItemSkipPolicy;
+import org.springframework.batch.item.file.FlatFileParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,12 +36,38 @@ public class BatchConfiguration {
     @Autowired
     private FlatFileDelimetedProcessor flatFileDelimetedProcessor;
 
-    public Step stepReadFile() {
-        return steps.get("Step2Chunk")
+    /**
+     * This step have a simple Skip General Policy treatment of Exceptions
+     * @return Step
+     */
+    public Step stepAddingSkip() {
+        return steps.get("stepAddingSkip")
                 .<Integer,Integer>chunk(3)
                 .reader(flatFileDelimetedItemReader.create())
                 .processor(new FlatFileDelimetedProcessor())
                 .writer(new ConsoleItemWrite())
+                .faultTolerant()
+                .skip(FlatFileParseException.class)
+                //.skipLimit(2)                     rmt to set the number-limit of errors tolerated
+                .skipPolicy(new AlwaysSkipItemSkipPolicy())   //rmt to tolerate all number of errors
+                .build();
+    }
+
+    /**
+     * This step have an Skip Listener Class to have the treatment of Exceptions
+     * @return Step
+     */
+    public Step stepAddingSkipListener() {
+        return steps.get("stepAddingSkipListener")
+                .<Integer,Integer>chunk(3)
+                .reader(flatFileDelimetedItemReader.create())
+                .processor(new FlatFileDelimetedProcessor())
+                .writer(new ConsoleItemWrite())
+                .faultTolerant()
+                .skip(RuntimeException.class)         //rmt - with SkipListener it is not required
+                .skipLimit(10)                               //rmt - to set the number-limit of errors tolerated
+                //.skipPolicy(new AlwaysSkipItemSkipPolicy())   //rmt - to tolerate all number of errors
+                .listener(new BatchSkipListener())
                 .build();
     }
 
@@ -50,10 +79,10 @@ public class BatchConfiguration {
     public Job helloworldJob() {
         return jobs.get("helloworldJob")
                 .listener(helloWorldJobExecutionListener)
-                .start(stepReadFile())   // adding step to read csv file
+                .start(stepAddingSkip())         // rmt - adding step to test skip
+                .next(stepAddingSkipListener())    // rmt - adding step to test skip listener
                 .build();
     }
-
 
 }
 

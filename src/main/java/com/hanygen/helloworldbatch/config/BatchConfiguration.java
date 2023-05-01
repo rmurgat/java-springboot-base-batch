@@ -32,8 +32,6 @@ public class BatchConfiguration {
     private FlatFileDelimetedItemReader flatFileDelimetedItemReader;
     @Autowired
     private FlatFileDelimetedProcessor flatFileDelimetedProcessor;
-    @Autowired
-    private FlatFileDelimetedPipesReader flatFileDelimetedPipesReader;
 
     public Step stepReadFile() {
         return steps.get("Step2Chunk")
@@ -44,14 +42,6 @@ public class BatchConfiguration {
                 .build();
     }
 
-    public Step stepReadFilePipes() {
-        return steps.get("Step2Chunk")
-                .<Integer,Integer>chunk(3)
-                .reader(flatFileDelimetedPipesReader.create())
-                .processor(new FlatFileDelimetedProcessor())
-                .writer(new ConsoleItemWrite())
-                .build();
-    }
     /**
      * El JOB para el BATCH
      * @return Job
@@ -61,7 +51,6 @@ public class BatchConfiguration {
         return jobs.get("helloworldJob")
                 .listener(helloWorldJobExecutionListener)
                 .start(stepReadFile())   // adding step to read csv file
-                .next(stepReadFilePipes()) // adding step to read file pipe delimeted
                 .build();
     }
 
